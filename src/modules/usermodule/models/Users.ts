@@ -1,7 +1,4 @@
 import mongoose, { Schema, Document } from "mongoose";
-import App from "../../../app";
-console.log("CATCH APP");
-console.log(App);
 export interface IUser extends Document {
     username: string;
     email: string;
