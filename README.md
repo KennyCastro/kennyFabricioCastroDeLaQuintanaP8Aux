@@ -1,10 +1,13 @@
 # typescriptRest
 ## Installation
+```bash
 git clone https://github.com/Ditmar/typescriptRest.git
 cd typescriptRest
 npm install
 docker-compose build
 docker-compose up
+```
+
 ## Configure Database
 Check waht ip you have in the mongodb container
 ```bash
@@ -25,4 +28,8 @@ and change in the configuration database app.ts
         let database: string = process.env.DATABASE || "seminario";
         let connectionString: string = `${host}/${database}`;
         mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
+```
+## For compile
+```bash
+npm run build
 ```
