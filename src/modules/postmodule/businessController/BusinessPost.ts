@@ -3,10 +3,17 @@ class BusinessPost {
   constructor() {}
   //addPost
   //CRUD
-  public async addPost(post: IPost) {
-    let postDb = new PostModel(post);
+  public async createPost(post: IPost) {
+    try {
+      let postDb = new PostModel(post);
+      let result = await postDb.save();
+      return result;
+    } catch (err) {
+      return err;
+    }
+    /* let postDb = new PostModel(post);
     let result = await postDb.save();
-    return result;
+    return result;*/
   }
   public async readPost() {
     let listpost: Array<IPost> = await PostModel.find();

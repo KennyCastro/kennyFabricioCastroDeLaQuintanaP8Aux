@@ -1,10 +1,12 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { IPost } from "../../postmodule/models/Post";
 export interface IUser extends Document {
   fullname: string;
   username: string;
   email: string;
   registerdate: Date;
   password: string;
+  post: Array<IPost>;
 }
 const userSchema: Schema = new Schema({
   fullname: { type: String, required: true, unique: true },
@@ -12,6 +14,7 @@ const userSchema: Schema = new Schema({
   email: { type: String, required: true, unique: true },
   registerdate: { type: Date, required: true },
   password: { type: String, required: true },
+  post: { type: Array },
 });
 export default mongoose.model<IUser>("User", userSchema);
 

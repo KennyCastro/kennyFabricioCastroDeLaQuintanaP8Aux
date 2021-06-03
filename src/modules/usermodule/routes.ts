@@ -20,12 +20,23 @@ class Routes {
     app.route(`${this.routeparent}/users`).get(this.routesController.getUsers);
 
     app
+      .route(`${this.routeparent}/getProfile/:username`)
+      .get(this.routesController.getProfile);
+
+    app
       .route(`${this.routeparent}/users/:id`)
       .put(this.routesController.updateUsers);
 
     app
       .route(`${this.routeparent}/users/:id`)
       .delete(this.routesController.removeUsers);
+
+    app
+      .route(`${this.routeparent}/addpost/:id`)
+      .put(this.routesController.addPost);
+    app
+      .route(`${this.routeparent}/removepost/:id`)
+      .put(this.routesController.removeUserPost);
 
     //--------------------POST ROUTES --------------------
 

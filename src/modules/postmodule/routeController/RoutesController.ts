@@ -9,7 +9,7 @@ class RoutesController {
     var postData = request.body;
     postData["createAt"] = new Date();
     postData["updateAt"] = new Date();
-    let result = await post.addPost(postData);
+    let result = await post.createPost(postData);
     response.status(201).json({ serverResponse: result });
   }
   public async getPost(request: Request, response: Response) {
