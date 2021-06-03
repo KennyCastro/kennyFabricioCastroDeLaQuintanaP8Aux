@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "prestart": "npm run build",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "dev": "nodemon --config nodemon.json src/server.ts"
   },
   "keywords": [
     "Api",
