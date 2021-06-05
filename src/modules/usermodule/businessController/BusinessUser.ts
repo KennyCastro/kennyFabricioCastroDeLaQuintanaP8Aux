@@ -18,13 +18,30 @@ class BusinessUser {
   public async readUsers(): Promise<Array<IUser>>;
   ///esta me devuelve solo un usuario
   public async readUsers(id: string): Promise<IUser>;
+  ///esta me devuelve el usuario que tiene el respectivo token
+  public async readUsers(
+    query: any,
+    skip: number,
+    limit: number
+  ): Promise<Array<IUser>>;
   //implementacion de la funcion
-  public async readUsers(parametro1?: string): Promise<Array<IUser> | IUser> {
+  public async readUsers(
+    parametro1?: string | any,
+    params2?: number,
+    params3?: number
+  ): Promise<Array<IUser> | IUser> {
     //aqui preguntamos si parametro1 existe y si es de tipo string
     if (parametro1 && typeof parametro1 == "string") {
       //si es que existe quiere decir que solo devolveremos un usuario
       let result: IUser = await UsersModel.findOne({ username: parametro1 });
       return result;
+    } else if (parametro1) {
+      let skip = params2 ? params2 : 0; //aqui dice esto: skip toma el valor de parametro 2 si es que existe y sino (para eso esta los dos puntos) toma el valor de 0
+      let limit = params3 ? params3 : 1;
+      let listUser: Array<IUser> = await UsersModel.find(parametro1)
+        .skip(skip)
+        .limit(limit);
+      return listUser;
     } else {
       let listUser: Array<IUser> = await UsersModel.find();
       return listUser;

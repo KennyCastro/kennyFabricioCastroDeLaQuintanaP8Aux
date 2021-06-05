@@ -1,6 +1,7 @@
 import RoutesController from "./routeController/RoutesController";
 import RoutesControllerP from "../postmodule/routeController/RoutesController";
 import { Express } from "express";
+import { security } from "./middleware";
 class Routes {
   private routesController: RoutesController;
   private routesControllerP: RoutesControllerP;
@@ -13,6 +14,9 @@ class Routes {
   }
   private configureRoutes(app: Express) {
     //--------------------USER ROUTES --------------------
+
+    app.route(`${this.routeparent}/login`).post(this.routesController.login);
+
     app
       .route(`${this.routeparent}/users`)
       .post(this.routesController.createUsers);
@@ -21,7 +25,7 @@ class Routes {
 
     app
       .route(`${this.routeparent}/getProfile/:username`)
-      .get(this.routesController.getProfile);
+      .get(security, this.routesController.getProfile);
 
     app
       .route(`${this.routeparent}/users/:id`)
