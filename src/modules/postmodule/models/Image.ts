@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+
 export interface IImage extends Document {
   path: string;
   relativepath: string;

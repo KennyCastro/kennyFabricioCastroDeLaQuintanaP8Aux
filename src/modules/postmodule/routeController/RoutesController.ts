@@ -91,11 +91,17 @@ class RoutesController {
         }
         //------------------------CREANDO LA IMAGEN ----------
         var img: BusinessImage = new BusinessImage();
-        var imgs: IImage;
-        imgs.path = totalpath;
+        var imgs: any = {
+          //si pongo de tipo IImagen a imgs me pide mandar o inicializar todos sus metodos, por eso lo puse any
+          path: totalpath,
+          relativepath: totalpath,
+          filename: filenametotal,
+          timestamp: new Date(),
+        };
+        /*imgs.path = totalpath;
         imgs.relativepath = relativepath;
         imgs.filename = filenametotal;
-        imgs.timestamp = new Date();
+        imgs.timestamp = new Date();*/
         let result = await img.createImage(imgs);
         response.status(201).json({ serverResponse: "Imagen creada" });
         return;
