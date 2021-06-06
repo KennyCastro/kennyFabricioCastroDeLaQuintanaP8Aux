@@ -3,6 +3,8 @@ import * as bodyParser from "body-parser";
 import UserModules from "./modules/usermodule/init";
 import mongoose, { Mongoose } from "mongoose";
 import router from "./web/routes";
+import FileUpload from "express-fileupload";
+
 class App {
   public app: Express = express();
   public mongooseClient: Mongoose;
@@ -12,7 +14,7 @@ class App {
     this.initApp();
   }
   public connectDatabase() {
-    let host: string = "mongodb://172.22.0.3:27017";
+    let host: string = "mongodb://172.22.0.2:27017";
     let database: string = process.env.DATABASE || "seminario";
     let connectionString: string = `${host}/${database}`;
     mongoose.connect(connectionString, {
@@ -33,6 +35,7 @@ class App {
   public configuration() {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: false }));
+    this.app.use(FileUpload({ limits: { fileSize: 50 * 1024 * 1024 } })); //estblecemos el tamaño de imagen
   }
   public initApp() {
     console.log("LOAD MODULES");

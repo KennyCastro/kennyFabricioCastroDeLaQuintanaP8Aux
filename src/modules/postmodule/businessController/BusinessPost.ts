@@ -15,10 +15,22 @@ class BusinessPost {
     let result = await postDb.save();
     return result;*/
   }
-  public async readPost() {
-    let listpost: Array<IPost> = await PostModel.find();
-    return listpost;
+  ///sobrecarga a la funcion readPost
+  ///esta es la sobre carga para toda una la lista de usurios (sin parametros)
+  public async readPost(): Promise<Array<IPost>>;
+  ///esta me devuelve solo un usuario
+  public async readPost(id: string): Promise<IPost>;
+  public async readPost(parametro1?: string) {
+    if (parametro1 && typeof parametro1 == "string") {
+      //si es que existe quiere decir que solo devolveremos un post
+      let result: IPost = await PostModel.findOne({ _id: parametro1 });
+      return result;
+    } else {
+      let listpost: Array<IPost> = await PostModel.find();
+      return listpost;
+    }
   }
+  //----
   public async updatePost(id: string, post: any) {
     let result = await PostModel.update({ _id: id }, { $set: post });
     return result;

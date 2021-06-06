@@ -57,6 +57,11 @@ class Routes {
     app
       .route(`${this.routeparent}/post/:id`)
       .delete(this.routesControllerP.removePost);
+
+    ///-------------------IMAGES ROUTES ------
+    app
+      .route(`${this.routeparent}/newimage`)
+      .post(this.routesControllerP.newImage);
   }
 }
 export default Routes;
