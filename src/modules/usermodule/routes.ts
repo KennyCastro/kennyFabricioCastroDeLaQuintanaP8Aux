@@ -57,11 +57,22 @@ class Routes {
     app
       .route(`${this.routeparent}/post/:id`)
       .delete(this.routesControllerP.removePost);
-
+    //
+    app
+      .route(`${this.routeparent}/post/:id/:file`)
+      .put(this.routesControllerP.adduriImage);
     ///-------------------IMAGES ROUTES ------
     app
       .route(`${this.routeparent}/newimage`)
       .post(this.routesControllerP.newImage);
+
+    app
+      .route(`${this.routeparent}/infoImage`)
+      .get(this.routesControllerP.infoImage);
+
+    app
+      .route(`${this.routeparent}/getImage/:file`)
+      .get(this.routesControllerP.getImage);
   }
 }
 export default Routes;

@@ -98,7 +98,7 @@ class RoutesController {
     let idPost = request.body.idPost;
     if (idUs == null && idPost == null) {
       response.status(300).json({
-        serverResponse: "No se definio id de usuario ni el id del rol",
+        serverResponse: "No se definio id de usuario ni el id del post",
       });
       return;
     }
@@ -107,7 +107,7 @@ class RoutesController {
     if (result == null) {
       response
         .status(300)
-        .json({ serverResponse: "El rol o usuario no existen" });
+        .json({ serverResponse: "El post o usuario no existen" });
       return;
     }
     response.status(200).json({ serverResponse: result });

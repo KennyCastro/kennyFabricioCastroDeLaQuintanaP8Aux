@@ -36,15 +36,42 @@ class RoutesController {
     response.status(200).json({ serverResponse: result });
   }
 
-  public async newImage(request: Request, response: Response) {
-    /*var id: string = request.params.id;
-    if (!id) {
+  //colocar la uri de la imagen en Image de post para acceder
+  public async adduriImage(request: Request, response: Response) {
+    var id: string = request.params.id;
+    var filename: string = request.params.file;
+    if (!id || !filename) {
       response
         .status(300)
-        .json({ serverResponse: "El id es necesario para subir una foto" });
+        .json({ serverResponse: "Post e imagen son necesarios" });
       return;
-    }*/
+    }
+    var post: BusinessPost = new BusinessPost();
+    var postData: IPost = await post.readPost(id);
+    if (!postData) {
+      response.status(300).json({ serverResponse: "No se encuentra el post" });
+      return;
+    }
+    var image: BusinessImage = new BusinessImage();
+    var img: IImage = await image.readImage(filename);
+    if (!img) {
+      response
+        .status(300)
+        .json({ serverResponse: "No se encuentra la imagen" });
+      return;
+    }
+    if (img.path == null) {
+      response.status(300).json({ serverResponse: "No existe la imagen " });
+      return;
+    }
+    postData.image = img.path;
+    var postResult: IPost = await postData.save();
+    return response.status(300).json({ serverResponse: postResult });
+    //response.sendFile(img.path);
+  }
 
+  //------------------------IMAGES -------
+  public async newImage(request: Request, response: Response) {
     //verificamos si el envio de imagenes es vacio o no
     if (isEmpty(request.files)) {
       response
@@ -52,12 +79,7 @@ class RoutesController {
         .json({ serverResponse: "No existe un archivo adjunto" });
       return;
     }
-    /*var post: BusinessPost = new BusinessPost();
-    var postToUpdate: IPost = await post.readPost(id);
-    if (!postToUpdate) {
-      response.status(300).json({ serverResponse: "El post no existe!" });
-      return;
-    }*/
+
     //directorio actual donde esta en el docker:   /opt/app/src/modules/postmodule/routeController
     var relativepath = `${__dirname}/../Images`; //salimos del directorio de docker para ubicarlo en el lugar correcto para guardar la imagen
     var paths = path.resolve(relativepath);
@@ -73,12 +95,13 @@ class RoutesController {
     }
 
     if (
-      getFileExtension(file.name) == "jpg" ||
-      getFileExtension(file.name) == "png" ||
-      getFileExtension(file.name) == "gif" ||
-      getFileExtension(file.name) == "jpeg"
+      getFileExtension(file.name) === "jpg" ||
+      getFileExtension(file.name) === "png" ||
+      getFileExtension(file.name) === "gif" ||
+      getFileExtension(file.name) === "jpeg"
     ) {
-      var filenamehash: string = sha1(new Date().toString().substr(0, 4));
+      console.log(getFileExtension(file.name));
+      var filenamehash: string = sha1(Date.now().toString()).substr(0, 7);
       var filenametotal: string = `${filenamehash}-${file.name}`;
       var totalpath = `${paths}/${filenametotal}`;
       //verificamos si se puede almacenar el archivo
@@ -94,25 +117,48 @@ class RoutesController {
         var imgs: any = {
           //si pongo de tipo IImagen a imgs me pide mandar o inicializar todos sus metodos, por eso lo puse any
           path: totalpath,
-          relativepath: totalpath,
+          relativepath: relativepath,
           filename: filenametotal,
           timestamp: new Date(),
         };
-        /*imgs.path = totalpath;
-        imgs.relativepath = relativepath;
-        imgs.filename = filenametotal;
-        imgs.timestamp = new Date();*/
+
         let result = await img.createImage(imgs);
         response.status(201).json({ serverResponse: "Imagen creada" });
         return;
-        //--actualizando la uri del post al que queremos almacenar
-        /*postToUpdate.image = "/api/getimage/" + id;
-        var postResult = await postToUpdate.save();
-        response.status(201).json({ serverResponse: "Imagen creada" });
-        return;*/
       });
+    } else {
+      response.status(300).json({ serverResponse: "No es imagen" });
+      return;
     }
-    //response.status(201).json({ serverResponse: "No es imagen" });
+  }
+
+  public async infoImage(request: Request, response: Response) {
+    var image: BusinessImage = new BusinessImage();
+    const result: Array<IImage> = await image.readImage();
+    response.status(200).json({ serverResponse: result });
+  }
+
+  public async getImage(request: Request, response: Response) {
+    var filename: string = request.params.file;
+    if (!filename) {
+      response
+        .status(300)
+        .json({ serverResponse: "Nombre de imagen no encontrado" });
+      return;
+    }
+    var image: BusinessImage = new BusinessImage();
+    var img: IImage = await image.readImage(filename);
+    if (!img) {
+      response
+        .status(300)
+        .json({ serverResponse: "Error no existe el nombre solicitado" });
+      return;
+    }
+    if (img.path == null) {
+      response.status(300).json({ serverResponse: "No existe la imagen " });
+      return;
+    }
+    response.sendFile(img.path);
   }
 }
 export default RoutesController;
