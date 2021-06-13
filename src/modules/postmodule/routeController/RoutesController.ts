@@ -64,7 +64,7 @@ class RoutesController {
       response.status(300).json({ serverResponse: "No existe la imagen " });
       return;
     }
-    postData.image = img.path;
+    postData.image = img.relativepath;
     var postResult: IPost = await postData.save();
     return response.status(300).json({ serverResponse: postResult });
     //response.sendFile(img.path);
@@ -117,7 +117,7 @@ class RoutesController {
         var imgs: any = {
           //si pongo de tipo IImagen a imgs me pide mandar o inicializar todos sus metodos, por eso lo puse any
           path: totalpath,
-          relativepath: relativepath,
+          relativepath: "/api/getImage/" + filenametotal,
           filename: filenametotal,
           timestamp: new Date(),
         };
@@ -140,25 +140,30 @@ class RoutesController {
 
   public async getImage(request: Request, response: Response) {
     var filename: string = request.params.file;
-    if (!filename) {
-      response
-        .status(300)
-        .json({ serverResponse: "Nombre de imagen no encontrado" });
+    try {
+      if (!filename) {
+        response
+          .status(300)
+          .json({ serverResponse: "Nombre de imagen no encontrado" });
+        return;
+      }
+      var image: BusinessImage = new BusinessImage();
+      var img: IImage = await image.readImage(filename);
+      if (!img) {
+        response
+          .status(300)
+          .json({ serverResponse: "Error no existe el nombre solicitado" });
+        return;
+      }
+      if (img.path == null) {
+        response.status(300).json({ serverResponse: "No existe la imagen " });
+        return;
+      }
+      response.sendFile(img.path);
       return;
+    } catch (err) {
+      return response.status(300).json({ serverResponse: "Error " });
     }
-    var image: BusinessImage = new BusinessImage();
-    var img: IImage = await image.readImage(filename);
-    if (!img) {
-      response
-        .status(300)
-        .json({ serverResponse: "Error no existe el nombre solicitado" });
-      return;
-    }
-    if (img.path == null) {
-      response.status(300).json({ serverResponse: "No existe la imagen " });
-      return;
-    }
-    response.sendFile(img.path);
   }
 }
 export default RoutesController;
