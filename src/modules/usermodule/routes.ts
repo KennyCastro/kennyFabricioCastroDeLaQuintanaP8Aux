@@ -42,6 +42,11 @@ class Routes {
       .route(`${this.routeparent}/removepost/:id`)
       .put(this.routesController.removeUserPost);
 
+    //------- EMAIL ROUTE ------
+    app
+      .route(`${this.routeparent}/send-email`)
+      .post(this.routesController.sendEmail); //enviar correo
+
     //--------------------POST ROUTES --------------------
 
     app

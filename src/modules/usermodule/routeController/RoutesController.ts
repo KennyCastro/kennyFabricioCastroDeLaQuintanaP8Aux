@@ -4,6 +4,8 @@ import jsonwebtoken from "jsonwebtoken";
 import { createToken } from "../createToken";
 import sha1 from "sha1";
 import { IUser } from "../models/Users";
+import nodemailer from "nodemailer";
+import path from "path";
 
 interface Icredentials {
   email: string;
@@ -119,6 +121,57 @@ class RoutesController {
     let idPost: string = request.body.idPost;
     let result = await post.removePost(idUs, idPost);
     response.status(200).json({ serverResponse: result });
+  }
+
+  public async sendEmail(request: Request, response: Response) {
+    /* const output = `
+    <p>You have a new contact request</p>
+    <h3>Contact Details</h3>
+    <ul>  
+      <li>Name: ${request.body.name}</li>
+      
+      <li>Email: ${request.body.email}</li>
+      <li>Phone: ${request.body.phone}</li>
+    </ul>
+    <h3>Message</h3>
+    <p>${request.body.message}</p>
+  `;
+*/ //Esto era prueba
+    // create reusable transporter object using the default SMTP transport
+    var transporter = nodemailer.createTransport({
+      service: "gmail", //use service debido a que estoy utilizando gmail, se utiliza host en caso de que tenga mi propio servidor de email
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: "CorreoEmisor@gmail.com", // generated ethereal user
+        pass: "PasswordEmisor", // generated ethereal password
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+
+    // setup email data with unicode symbols
+
+    // send mail with defined transport object
+
+    const info = await transporter.sendMail({
+      from: '"Kenny F Castro" <CorreoEmisor@gmail.com>', // sender address
+      to: "pruebaseguridadsistemas@gmail.com , logatsudesu@gmail.com", // list of receivers
+      subject: "This is my test for the assignment", // Subject line
+      text: "hi, my name is Kenny hope you post my picture", // plain text body
+      html: 'Embedded image: <img src="cid:axiliaturaseminario2021@gmail.com"/>',
+      attachments: [
+        {
+          filename: "bd5be8c-meme.jpeg",
+          path: "/opt/app/src/modules/postmodule/Images/bd5be8c-meme.jpeg",
+          cid: "axiliaturaseminario2021@gmail.com", //same cid value as in the html img src
+        },
+      ],
+    });
+    console.log("message send", info.messageId);
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    response.status(200).json({ serverResponse: info });
   }
 }
 export default RoutesController;
