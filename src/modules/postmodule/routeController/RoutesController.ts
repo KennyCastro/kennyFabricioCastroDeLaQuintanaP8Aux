@@ -21,6 +21,14 @@ class RoutesController {
     const result: Array<IPost> = await post.readPost();
     response.status(200).json({ serverResponse: result });
   }
+
+  public async getPostUser(request: Request, response: Response) {
+    var post: BusinessPost = new BusinessPost();
+    let id = request.params.id;
+    const result: Array<IPost> = await post.readPostUser(id);
+    response.status(200).json({ serverResponse: result });
+  }
+
   public async updatePost(request: Request, response: Response) {
     var post: BusinessPost = new BusinessPost();
     let id: string = request.params.id;

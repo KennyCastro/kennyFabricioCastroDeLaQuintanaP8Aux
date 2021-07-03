@@ -24,6 +24,10 @@ class Routes {
     app.route(`${this.routeparent}/users`).get(this.routesController.getUsers);
 
     app
+      .route(`${this.routeparent}/users/:id`)
+      .get(this.routesController.getOnlyUsers);
+
+    app
       .route(`${this.routeparent}/getProfile/:username`)
       .get(security, this.routesController.getProfile);
 
@@ -54,6 +58,10 @@ class Routes {
       .post(this.routesControllerP.createPost);
 
     app.route(`${this.routeparent}/post`).get(this.routesControllerP.getPost);
+
+    app
+      .route(`${this.routeparent}/post/:id`)
+      .get(this.routesControllerP.getPostUser);
 
     app
       .route(`${this.routeparent}/post/:id`)

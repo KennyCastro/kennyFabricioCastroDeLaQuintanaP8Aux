@@ -48,6 +48,11 @@ class BusinessUser {
     }
   }
 
+  public async readOnlyUsers(id: string) {
+    let result: IUser = await UsersModel.findOne({ _id: id });
+    return result;
+  }
+
   public async updateUsers(id: string, user: any) {
     let result = await UsersModel.update({ _id: id }, { $set: user });
     return result;

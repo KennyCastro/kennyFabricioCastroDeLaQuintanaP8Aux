@@ -40,6 +40,7 @@ class RoutesController {
     credentials.password = sha1(credentials.password); //ciframos el password para comparar, debido a que mas antes ya ciframos nuestros passwords
     const user: BusinessUser = new BusinessUser();
     let result: Array<IUser> = await user.readUsers(credentials, 0, 1);
+    console.log(result);
     if (result.length == 1) {
       //sus credenciales son correctas
       var loginUser: IUser = result[0];
@@ -47,10 +48,11 @@ class RoutesController {
 
       response.status(200).json({
         serverResponse: {
+          _id: loginUser._id,
           fullname: loginUser.fullname,
           email: loginUser.email,
           username: loginUser.username,
-          password: loginUser.password,
+          //password: loginUser.password,
           token,
         },
       });
@@ -74,16 +76,27 @@ class RoutesController {
     const result: Array<IUser> = await user.readUsers();
     response.status(200).json({ serverResponse: result });
   }
+
+  public async getOnlyUsers(request: Request, response: Response) {
+    var user: BusinessUser = new BusinessUser();
+    let id = request.params.id;
+    const result: IUser = await user.readOnlyUsers(id);
+    response.status(200).json({ serverResponse: result });
+  }
+
   public async getProfile(request: Request, response: Response) {
     var user: BusinessUser = new BusinessUser();
     let usernam: string = request.params.username;
-    const result: IUser | null = await user.readUsers(usernam);
+    const result: IUser | null = await user.readOnlyUsers(usernam);
     response.status(200).json({ serverResponse: result });
   }
   public async updateUsers(request: Request, response: Response) {
     var user: BusinessUser = new BusinessUser();
     let id: string = request.params.id;
     var params = request.body;
+    if (params.password) {
+      params["password"] = sha1(params["password"]);
+    }
     var result = await user.updateUsers(id, params);
     response.status(200).json({ serverResponse: result });
   }

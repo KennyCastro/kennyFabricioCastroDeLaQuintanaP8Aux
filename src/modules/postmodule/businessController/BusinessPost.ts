@@ -31,6 +31,22 @@ class BusinessPost {
     }
   }
   //----
+
+  public async readPostUser(idU: string) {
+    let postData = await PostModel.find();
+    try {
+      let result = postData.filter((item) => {
+        if (item.idUs.toString() == idU) {
+          return true;
+        }
+        return false;
+      });
+      return result;
+    } catch (err) {
+      return err;
+    }
+  }
+
   public async updatePost(id: string, post: any) {
     let result = await PostModel.update({ _id: id }, { $set: post });
     return result;
