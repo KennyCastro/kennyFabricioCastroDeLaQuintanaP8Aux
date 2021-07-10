@@ -16,7 +16,7 @@ class App {
     this.initApp();
   }
   public connectDatabase() {
-    let host: string = "mongodb://172.22.0.2:27017";
+    let host: string = "mongodb://172.22.0.3:27017";
     let database: string = process.env.DATABASE || "seminario";
     let connectionString: string = `${host}/${database}`;
     mongoose.connect(connectionString, {
